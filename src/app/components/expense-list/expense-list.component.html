@@ -1,0 +1,53 @@
+<div class="expense-list-container">
+  <div class="header">
+    <h2>Your Expenses</h2>
+    <div class="controls">
+      <select [(ngModel)]="selectedCategory" (change)="filterExpenses()" class="filter-select">
+        <option value="all">All Categories</option>
+        <option *ngFor="let cat of financeService.categories" [value]="cat.name">
+          {{ cat.icon }} {{ cat.name }}
+        </option>
+      </select>
+
+      <select [(ngModel)]="sortBy" (change)="filterExpenses()" class="sort-select">
+        <option value="date">Sort by Date</option>
+        <option value="amount">Sort by Amount</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="total-display" *ngIf="filteredExpenses.length > 0">
+    <span>Total:</span>
+    <strong>₹{{ getTotalAmount().toFixed(2) }}</strong>
+  </div>
+
+  <div class="expenses-grid" *ngIf="filteredExpenses.length > 0; else noExpenses">
+    <div *ngFor="let expense of filteredExpenses" class="expense-card">
+      <div class="expense-icon" [style.background-color]="getCategoryColor(expense.category)">
+        {{ getCategoryIcon(expense.category) }}
+      </div>
+      <div class="expense-details">
+        <div class="expense-header">
+          <h3>{{ expense.description }}</h3>
+          <span class="expense-amount">₹{{ expense.amount.toFixed(2) }}</span>
+        </div>
+        <div class="expense-meta">
+          <span class="category">{{ expense.category }}</span>
+          <span class="date">{{ expense.date | date: 'MMM d, y' }}</span>
+          <span class="recurring" *ngIf="expense.isRecurring">🔄 Recurring</span>
+        </div>
+      </div>
+      <button class="delete-btn" (click)="deleteExpense(expense.id)" title="Delete expense">
+        🗑️
+      </button>
+    </div>
+  </div>
+
+  <ng-template #noExpenses>
+    <div class="no-expenses">
+      <div class="empty-icon">📊</div>
+      <p>No expenses found</p>
+      <span>Start by adding your first expense above</span>
+    </div>
+  </ng-template>
+</div>

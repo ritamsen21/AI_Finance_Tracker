@@ -1,0 +1,63 @@
+<div class="chatbot-container">
+  <div class="chatbot-header">
+    <div class="header-content">
+      <span class="bot-avatar">🤖</span>
+      <div class="header-text">
+        <h2>AI Finance Assistant</h2>
+        <p class="status">Online • Ready to help</p>
+      </div>
+    </div>
+    <button class="clear-btn" (click)="clearChat()" title="Clear chat">
+      🗑️
+    </button>
+  </div>
+
+  <div class="chat-messages">
+    <div *ngFor="let message of messages" 
+         class="message-wrapper"
+         [class.user-message]="message.isUser"
+         [class.ai-message]="!message.isUser">
+      <div class="message-bubble">
+        <p>{{ message.text }}</p>
+        <span class="timestamp">{{ message.timestamp | date: 'short' }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="isTyping" class="message-wrapper ai-message">
+      <div class="message-bubble typing">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-questions">
+    <p class="quick-label">Quick questions:</p>
+    <div class="quick-buttons">
+      <button *ngFor="let question of quickQuestions" 
+              class="quick-btn"
+              (click)="sendQuickQuestion(question)">
+        {{ question }}
+      </button>
+    </div>
+  </div>
+
+  <div class="chat-input-container">
+    <input
+      type="text"
+      [(ngModel)]="userInput"
+      (keyup.enter)="sendMessage()"
+      placeholder="Ask me about your finances..."
+      class="chat-input"
+    />
+    <button 
+      (click)="sendMessage()" 
+      class="send-btn"
+      [disabled]="!userInput.trim()">
+      <span class="send-icon">📤</span>
+    </button>
+  </div>
+</div>

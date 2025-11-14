@@ -1,0 +1,148 @@
+<div class="dashboard-container">
+  <h1 class="dashboard-title">📊 Financial Dashboard</h1>
+
+  <!-- Monthly Income Input -->
+  <div class="income-section">
+    <label for="income">Monthly Income:</label>
+    <div class="income-input-group">
+      <input 
+        type="number" 
+        id="income"
+        [(ngModel)]="monthlyIncome" 
+        (change)="updateIncome()"
+        min="0"
+        step="100"
+      />
+      <button (click)="updateIncome()" class="update-btn">Update</button>
+    </div>
+  </div>
+
+  <!-- Monthly Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card income">
+      <div class="stat-icon">💵</div>
+      <div class="stat-content">
+        <h3>Total Income</h3>
+        <p class="stat-value">₹{{ monthlyStats.totalIncome.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card expenses">
+      <div class="stat-icon">💸</div>
+      <div class="stat-content">
+        <h3>Total Expenses</h3>
+        <p class="stat-value">₹{{ monthlyStats.totalExpenses.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card savings" [class.negative]="monthlyStats.savings < 0">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <h3>Savings</h3>
+        <p class="stat-value">₹{{ monthlyStats.savings.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card savings-rate" [class.low]="monthlyStats.savingsRate < 10" [class.good]="monthlyStats.savingsRate >= 20">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <h3>Savings Rate</h3>
+        <p class="stat-value">{{ monthlyStats.savingsRate.toFixed(1) }}%</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Insights Section -->
+  <div class="insights-section" *ngIf="insights.length > 0">
+    <h2>🤖 AI Insights & Recommendations</h2>
+    <div class="insights-grid">
+      <div *ngFor="let insight of insights" 
+           class="insight-card"
+           [ngClass]="getInsightClass(insight.type)">
+        <div class="insight-icon">{{ insight.icon }}</div>
+        <div class="insight-content">
+          <h4>{{ insight.title }}</h4>
+          <p>{{ insight.message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spending Patterns -->
+  <div class="patterns-section" *ngIf="patterns.length > 0">
+    <h2>🔍 Spending Patterns Analysis</h2>
+    <div class="patterns-grid">
+      <div *ngFor="let pattern of patterns" class="pattern-card">
+        <div class="pattern-header">
+          <span class="pattern-category">{{ pattern.category }}</span>
+          <span class="pattern-trend">{{ getTrendIcon(pattern.trend) }} {{ pattern.trend }}</span>
+        </div>
+        <div class="pattern-stats">
+          <div class="pattern-stat">
+            <span class="label">Avg Amount:</span>
+            <span class="value">₹{{ pattern.averageAmount.toFixed(2) }}</span>
+          </div>
+          <div class="pattern-stat">
+            <span class="label">Frequency:</span>
+            <span class="value">{{ pattern.frequency }} times</span>
+          </div>
+          <div class="pattern-stat">
+            <span class="label">Wasteful Score:</span>
+            <span class="value" [class.high]="pattern.wastefulScore > 60" [class.medium]="pattern.wastefulScore > 30 && pattern.wastefulScore <= 60">
+              {{ pattern.wastefulScore }}%
+            </span>
+          </div>
+        </div>
+        <div class="wasteful-bar">
+          <div class="wasteful-fill" 
+               [style.width.%]="pattern.wastefulScore"
+               [class.high]="pattern.wastefulScore > 60"
+               [class.medium]="pattern.wastefulScore > 30 && pattern.wastefulScore <= 60">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Spending Breakdown -->
+  <div class="category-section" *ngIf="categorySpending.length > 0">
+    <h2>📈 Spending by Category</h2>
+    <div class="category-grid">
+      <div *ngFor="let cat of categorySpending" class="category-item">
+        <div class="category-icon" [style.background-color]="cat.color">
+          {{ cat.icon }}
+        </div>
+        <div class="category-info">
+          <h4>{{ cat.category }}</h4>
+          <p class="category-amount">₹{{ cat.amount.toFixed(2) }}</p>
+          <div class="category-bar">
+            <div class="category-fill" 
+                 [style.width.%]="cat.percentage"
+                 [style.background-color]="cat.color">
+            </div>
+          </div>
+          <span class="category-percentage">{{ cat.percentage.toFixed(1) }}% of total</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Month Predictions -->
+  <div class="predictions-section" *ngIf="predictions.length > 0">
+    <h2>🔮 Next Month Expense Predictions</h2>
+    <div class="prediction-total">
+      <span>Predicted Total:</span>
+      <strong>₹{{ getTotalPredictedExpenses().toFixed(2) }}</strong>
+    </div>
+    <div class="predictions-grid">
+      <div *ngFor="let prediction of predictions" class="prediction-card">
+        <h4>{{ prediction.category }}</h4>
+        <p class="predicted-amount">₹{{ prediction.predictedAmount.toFixed(2) }}</p>
+        <div class="prediction-meta">
+          <span class="confidence">{{ prediction.confidence }}% confidence</span>
+          <span class="based-on">Based on {{ prediction.basedOnMonths }} months</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
