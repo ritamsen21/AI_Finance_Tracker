@@ -1,14 +1,14 @@
 <div class="chatbot-container">
   <div class="chatbot-header">
     <div class="header-content">
-      <span class="bot-avatar">🤖</span>
+      <i class="fas fa-robot bot-avatar"></i>
       <div class="header-text">
         <h2>AI Finance Assistant</h2>
         <p class="status">Online • Ready to help</p>
       </div>
     </div>
     <button class="clear-btn" (click)="clearChat()" title="Clear chat">
-      🗑️
+      <i class="fas fa-trash-alt"></i>
     </button>
   </div>
 
@@ -57,7 +57,7 @@
       (click)="sendMessage()" 
       class="send-btn"
       [disabled]="!userInput.trim()">
-      <span class="send-icon">📤</span>
+      <i class="fas fa-paper-plane send-icon"></i>
     </button>
   </div>
 </div>
